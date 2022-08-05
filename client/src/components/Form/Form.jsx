@@ -9,7 +9,7 @@ import { createPost, updatePost } from '../../actions/posts';
 const Form = ({ currentId, setCurrentId }) => {
     const classes = useStyles();
     const user = JSON.parse(localStorage.getItem('profile'));
-    console.log(user);
+    // console.log(user);
     const [postData, setPostData] = useState({
 
         title: '',
