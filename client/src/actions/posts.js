@@ -1,4 +1,4 @@
-import { FETCH_POST, START_LOADING, END_LOADING, FETCH_ALL, CREATE, UPDATE, DELETE, LIKE, FETCH_BY_SEARCH } from '../constants/actionTypes';
+import { COMMENT, FETCH_POST, START_LOADING, END_LOADING, FETCH_ALL, CREATE, UPDATE, DELETE, LIKE, FETCH_BY_SEARCH } from '../constants/actionTypes';
 import * as api from '../api';
 
 
@@ -54,35 +54,39 @@ export const getPostsBySearch = (searchQuery) => async (dispatch) => {
 
     } catch (error) {
         console.log(error);
+
     }
 
 
 }
 
 
-export const createPost = (post) => async (dispatch) => {
+export const createPost = (post, navigate) => async (dispatch) => {
 
     try {
         dispatch({ type: START_LOADING });
         // data has that same post if saving to database was successfull
         const { data } = await api.createPost(post);
-
+        navigate(`/posts/${data._id}`);
         dispatch({
             type: CREATE,
             payload: data
         });
         dispatch({ type: END_LOADING });
+
     } catch (error) {
         console.log(error);
     }
 }
 
-export const updatePost = (id, post) => async (dispatch) => {
+export const updatePost = (id, post, navigate) => async (dispatch) => {
 
     try {
+        dispatch({ type: START_LOADING });
         const { data } = await api.updatePost(id, post);
-
-        dispatch({ type: UPDATE, payload: data })
+        navigate(`/posts/${data._id}`);
+        dispatch({ type: UPDATE, payload: data });
+        dispatch({ type: END_LOADING });
     } catch (error) {
         console.log(error);
     }
@@ -111,3 +115,13 @@ export const likePost = (id) => async (dispatch) => {
     }
 }
 
+export const commentPost = (finalComment, _id) => async (dispatch) => {
+    try {
+        const { data } = await api.commentPost(_id, finalComment);
+
+        dispatch({ type: DELETE, payload: data })
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
